@@ -5,11 +5,11 @@ export class Vehicle {
   constructor(scene) {
     this.scene = scene;
     this.speed = 0;
-    this.maxSpeed = 5;
+    this.maxSpeed = 3;
     this.acceleration = 12;
     this.deceleration = 8;
     this.turnSpeed = 1;
-    this.rotation = 3.5;
+    this.rotation = 3.2;
     this.mesh = null;
     this.isLoaded = false;
 
@@ -29,7 +29,7 @@ export class Vehicle {
         }
       });
 
-      this.mesh.position.set(-7, 2.2, 0);
+      this.mesh.position.set(-7, 2.2, -5);
       this.mesh.rotation.y = 0;
       this.scene.add(this.mesh);
       this.isLoaded = true;

@@ -13,6 +13,7 @@ export class ControlsUI {
       <p><strong>A/←</strong> Turn Left</p>
       <p><strong>D/→</strong> Turn Right</p>
       <p><strong>Right Click + Drag</strong> Look Around</p>
+      <p><strong>Mouse Wheel</strong> Zoom In/Out</p>
     `;
     document.body.appendChild(container);
   }

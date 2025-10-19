@@ -67,6 +67,7 @@ export class Camera {
 
     window.addEventListener('touchend', () => {
       this.isDragging = false;
+      this.previousTouchDistance = 0;
     });
 
     window.addEventListener('touchmove', (e) => {
