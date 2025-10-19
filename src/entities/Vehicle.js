@@ -1,60 +1,70 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export class Vehicle {
   constructor(scene) {
     this.scene = scene;
     this.speed = 0;
-    this.maxSpeed = 30;
-    this.acceleration = 15;
-    this.deceleration = 10;
-    this.turnSpeed = 2;
+    this.maxSpeed = 25;
+    this.acceleration = 12;
+    this.deceleration = 8;
+    this.turnSpeed = 1.8;
     this.rotation = 0;
+    this.mesh = null;
+    this.isLoaded = false;
 
-    this.createMesh();
+    this.loadTruck();
   }
 
-  createMesh() {
+  async loadTruck() {
+    const loader = new GLTFLoader();
+    try {
+      const gltf = await loader.loadAsync('/Orange Truck.glb');
+      this.mesh = gltf.scene;
+      
+      this.mesh.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+
+      this.mesh.position.y = 0;
+      this.scene.add(this.mesh);
+      this.isLoaded = true;
+    } catch (error) {
+      console.error('Error loading truck:', error);
+      this.createFallbackTruck();
+    }
+  }
+
+  createFallbackTruck() {
     const carBody = new THREE.Group();
 
     const bodyGeometry = new THREE.BoxGeometry(2, 1, 4);
-    const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xff4444 });
+    const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xff8800 });
     const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
     body.position.y = 0.5;
     body.castShadow = true;
     carBody.add(body);
 
     const cabinGeometry = new THREE.BoxGeometry(1.8, 0.8, 2);
-    const cabinMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    const cabinMaterial = new THREE.MeshStandardMaterial({ color: 0xffa500 });
     const cabin = new THREE.Mesh(cabinGeometry, cabinMaterial);
     cabin.position.y = 1.4;
     cabin.position.z = -0.3;
     cabin.castShadow = true;
     carBody.add(cabin);
 
-    const wheelGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.3, 16);
-    const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
-
-    const wheelPositions = [
-      { x: -1, z: 1.2 },
-      { x: 1, z: 1.2 },
-      { x: -1, z: -1.2 },
-      { x: 1, z: -1.2 }
-    ];
-
-    wheelPositions.forEach(pos => {
-      const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
-      wheel.rotation.z = Math.PI / 2;
-      wheel.position.set(pos.x, 0.4, pos.z);
-      wheel.castShadow = true;
-      carBody.add(wheel);
-    });
-
     this.mesh = carBody;
-    this.mesh.position.y = 0.5;
+    this.mesh.position.y = 0;
     this.scene.add(this.mesh);
+    this.isLoaded = true;
   }
 
   update(movement, deltaTime) {
+    if (!this.isLoaded || !this.mesh) return;
+
     if (movement.forward) {
       this.speed = Math.min(this.speed + this.acceleration * deltaTime, this.maxSpeed);
     } else if (movement.backward) {

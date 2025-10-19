@@ -9,7 +9,7 @@ export class CityLoader {
 
   async load() {
     try {
-      const gltf = await this.loader.loadAsync('/SampleScene.glb');
+      const gltf = await this.loader.loadAsync('/BRP Sample Scene.glb');
       
       gltf.scene.traverse((child) => {
         if (child.isMesh) {
