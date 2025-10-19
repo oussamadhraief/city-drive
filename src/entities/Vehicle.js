@@ -5,11 +5,11 @@ export class Vehicle {
   constructor(scene) {
     this.scene = scene;
     this.speed = 0;
-    this.maxSpeed = 25;
+    this.maxSpeed = 5;
     this.acceleration = 12;
     this.deceleration = 8;
-    this.turnSpeed = 1.8;
-    this.rotation = 0;
+    this.turnSpeed = 1;
+    this.rotation = 3.5;
     this.mesh = null;
     this.isLoaded = false;
 
@@ -29,7 +29,8 @@ export class Vehicle {
         }
       });
 
-      this.mesh.position.y = 0;
+      this.mesh.position.set(-7, 2.2, 0);
+      this.mesh.rotation.y = 0;
       this.scene.add(this.mesh);
       this.isLoaded = true;
     } catch (error) {
@@ -66,9 +67,9 @@ export class Vehicle {
     if (!this.isLoaded || !this.mesh) return;
 
     if (movement.forward) {
-      this.speed = Math.min(this.speed + this.acceleration * deltaTime, this.maxSpeed);
+      this.speed = Math.max(this.speed - this.acceleration * deltaTime, -this.maxSpeed);
     } else if (movement.backward) {
-      this.speed = Math.max(this.speed - this.acceleration * deltaTime, -this.maxSpeed * 0.5);
+      this.speed = Math.min(this.speed + this.acceleration * deltaTime, this.maxSpeed * 0.5);
     } else {
       if (this.speed > 0) {
         this.speed = Math.max(0, this.speed - this.deceleration * deltaTime);
