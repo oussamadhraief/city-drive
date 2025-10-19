@@ -7,9 +7,11 @@ import { Controls } from '../systems/Controls';
 import { Vehicle } from '../entities/Vehicle';
 import { ControlsUI } from '../ui/ControlsUI';
 import { MobileControls } from '../ui/MobileControls';
+import { Loader } from '../ui/Loader';
 
 export class App {
   constructor() {
+    this.loader = new Loader();
     this.scene = new Scene();
     this.camera = new Camera();
     this.renderer = new Renderer();
@@ -29,6 +31,7 @@ export class App {
   async init() {
     await this.cityLoader.load();
     this.camera.setTarget(this.vehicle.mesh);
+    this.loader.complete();
   }
 
   setupEventListeners() {
